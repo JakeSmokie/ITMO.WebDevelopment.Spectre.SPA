@@ -1,19 +1,26 @@
 <template>
   <div>
-    <b-list-group-item v-b-toggle="$id('collapse1')"
+    <b-list-group-item v-b-toggle="$id('collapse_planet_info')"
                        class="text-success" href="#">
-      {{ planet.name }}
+      {{ planetData.name }}
     </b-list-group-item>
-    <b-collapse :id="$id('collapse1')" class="mt-0" accordion="123">
+    <b-collapse :id="$id('collapse_planet_info')" class="mt-0" accordion="planets">
       <b-card>
-        <text-input title="Название" v-on:submit="submit()" v-bind:text.sync="planet.name"/>
+        <text-input title="Название"
+                    error-text="Название планеты должно состоять как минимум из одного символа"
+                    :validator="x => x.toString().trim().length > 0"
+                    v-on:submit="submit()"
+                    v-bind:is-valid.sync="newNameCorrect"
+                    v-bind:text.sync="planetData.name"
+                    capitalize
+        />
 
         <b-form-group
           description="Краткое описание планеты."
           class="mt-3"
         >
           <b-form-textarea
-            v-model="planet.description"
+            v-model="planetData.description"
             placeholder="Описание планеты"
             rows="1"
             max-rows="6"
@@ -63,23 +70,34 @@
 
 <script>
   import TextInput from "@/components/misc/input/TextInput";
-  import FourButtonsSelector from "@/components/misc/input/FourButtonsSelector";
+  import ButtonsSelector from "@/components/misc/input/ButtonsSelector";
   import RaceDangerSelector from "@/components/keykeepers/planets/RaceDangerSelector";
   import BButtonToolbar from "bootstrap-vue/src/components/button-toolbar/button-toolbar";
+  import {PlanetEntity} from "@/classes/PlanetEntity";
 
   export default {
     name: "Planet",
-    components: {BButtonToolbar, RaceDangerSelector, FourButtonsSelector, TextInput},
+    components: {BButtonToolbar, RaceDangerSelector, ButtonsSelector, TextInput},
     data() {
-      return {}
+      return {
+        planetData: this.planet,
+        newNameCorrect: true
+      }
     },
 
-    props: ['planet'],
+    props: {
+      planet: {
+        type: PlanetEntity
+      }
+    },
 
     methods: {
       submit() {
+        if (!this.newNameCorrect) {
+          return;
+        }
+
         console.log('Value submitted...');
-        return false;
       }
     }
   }

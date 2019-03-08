@@ -14,7 +14,7 @@
           Кто Вы?
         </p>
 
-        <b-button variant="outline-success" :to="'tourists/'">Я турист</b-button>
+        <!--<b-button variant="outline-success" :to="'tourists/'">Я турист</b-button>-->
         <b-button variant="outline-danger" :to="'keykeepers/'">Я ключник</b-button>
       </b-jumbotron>
     </div>
