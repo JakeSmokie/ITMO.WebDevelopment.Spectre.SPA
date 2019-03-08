@@ -2,7 +2,7 @@
   <b-form @submit="onSubmit">
     <b-input-group :prepend="title" size="sm">
       <b-form-input v-bind:value="text"
-                    v-on:input="$emit('update:text', $event); $emit('update:is-valid', validation)"
+                    v-on:input="$emit('update:text', $event)"
                     size="sm"
                     :state="validation"
                     :formatter="format">
@@ -48,22 +48,21 @@
         default: x => true
       },
 
-      isValid: {
-        type: Boolean,
-        default: true
-      },
-
       capitalize: {
         type: Boolean,
         default: false
-      }
+      },
+
+      noValidation: {
+        type: Boolean,
+        default: false
+      },
     },
 
     methods: {
       onSubmit(e) {
         e.preventDefault();
 
-        this.$emit('update:is-valid', this.validation);
         this.$emit('submit');
       },
 
@@ -71,18 +70,20 @@
         if (this.capitalize) {
           return value.replace(/(^|\s)\S/g, l => l.toUpperCase())
         }
+
+        return value;
       }
     },
 
     computed: {
       validation() {
+        if (this.noValidation) {
+          return null;
+        }
+
         return this.validator(this.text);
       }
     },
-
-    created() {
-      this.$emit('update:is-valid', this.validation);
-    }
   }
 </script>
 

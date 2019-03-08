@@ -13,12 +13,12 @@
     </div>
     <b-list-group>
       <b-collapse :id="$id('collapse_add_planet')" class="mt-0">
-        <planet-add-form/>
+        <planet-add-form v-on:new-planet="addPlanet($event)"/>
       </b-collapse>
 
       <planet v-for="planet of filteredPlanets"
               :key="planet.id"
-              v-bind:planet="planet"/>
+              v-bind:planet.sync="planet"/>
     </b-list-group>
   </div>
 </template>
@@ -28,6 +28,8 @@
   import Planet from "./Planet";
   import {PlanetEntity} from "@/classes/PlanetEntity";
   import PlanetAddForm from "@/components/keykeepers/planets/PlanetAddForm";
+  import {StationOnPlanetEntity} from "@/classes/StationOnPlanetEntity";
+  import {RaceOnPlanetEntity} from "@/classes/RaceOnPlanetEntity";
 
   export default {
     name: 'KeykeepersPlanetsList',
@@ -36,7 +38,17 @@
     data() {
       return {
         planets: [
-          new PlanetEntity(0, "Земля", "Здесь живут люди"),
+          new PlanetEntity(0, "Земля", "Здесь живут люди", [
+            new RaceOnPlanetEntity(0, "Люди", 3),
+            new RaceOnPlanetEntity(1, "Чужие", 2),
+            new RaceOnPlanetEntity(2, "Диодао", 1),
+            new RaceOnPlanetEntity(3, "Аранки", 3),
+          ], [
+            new StationOnPlanetEntity(0, "Москва"),
+            new StationOnPlanetEntity(1, "Нью-Йорк"),
+            new StationOnPlanetEntity(2, "Париж"),
+            new StationOnPlanetEntity(3, "Токио"),
+          ]),
           new PlanetEntity(1, "Марс", "Elon Musk"),
           new PlanetEntity(2, "Плутон", "..."),
         ],
@@ -52,7 +64,16 @@
       }
     },
 
-    methods: {}
+    methods: {
+      addPlanet(planet) {
+        const newPlanet = Object.assign(new PlanetEntity(), planet);
+        newPlanet.id = this.planets.length;
+
+        // TODO: http
+
+        this.planets.push(newPlanet);
+      }
+    }
   }
 </script>
 

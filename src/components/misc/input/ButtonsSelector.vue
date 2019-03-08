@@ -3,7 +3,7 @@
     <b-button-group size="sm">
       <b-button v-for="(variant, index) in variants"
                 :key="index"
-                v-bind:variant="(index === selected ? '' : 'outline-') + variant.style"
+                :variant="(index === currentSelection ? '' : 'outline-') + variant.style"
                 v-on:click="selectItem(index)">
         {{ variant.text }}
       </b-button>
@@ -24,19 +24,36 @@
       },
 
       variants: {
-        type: Object
+        type: Array
       }
     },
 
     data() {
       return {
+        selected_: this.selected
+      }
+    },
+
+    computed: {
+      currentSelection: {
+        get: function () {
+          return this.selected_;
+        },
+
+        set: function (value) {
+          this.selected_ = value;
+          this.$emit('update:selected', value);
+        }
       }
     },
 
     methods: {
       selectItem(index) {
-        this.selected = index;
-        this.$emit('update:selected', index);
+        if (index === this.currentSelection) {
+          return;
+        }
+
+        this.currentSelection = index;
         this.$emit('clicked');
       }
     }

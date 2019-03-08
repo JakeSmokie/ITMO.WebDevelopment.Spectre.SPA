@@ -1,16 +1,16 @@
 <template>
   <div>
     <b-list-group-item v-b-toggle="$id('collapse_planet_info')"
-                       class="text-success" href="#">
+                       href="#"
+                       :class="planetData.enabled ? 'text-success' : 'text-danger'">
       {{ planetData.name }}
     </b-list-group-item>
     <b-collapse :id="$id('collapse_planet_info')" class="mt-0" accordion="planets">
       <b-card>
         <text-input title="Название"
                     error-text="Название планеты должно состоять как минимум из одного символа"
-                    :validator="x => x.toString().trim().length > 0"
-                    v-on:submit="submit()"
-                    v-bind:is-valid.sync="newNameCorrect"
+                    :validator="isNameValid"
+                    v-on:submit="savePlanetName()"
                     v-bind:text.sync="planetData.name"
                     capitalize
         />
@@ -31,15 +31,19 @@
           <b-row align-h="between">
             <b-col cols="auto" vertical-align="center">Станции</b-col>
             <b-col cols="auto">
-              <b-button size="sm">Добавить</b-button>
+              <b-button size="sm" v-on:click="addStation()">Добавить</b-button>
             </b-col>
           </b-row>
 
           <div class="mt-2">
-            <text-input v-on:submit="submit()" text="Москва" class="mt-1"/>
-            <text-input v-on:submit="submit()" text="Нью-Йорк" class="mt-1"/>
-            <text-input v-on:submit="submit()" text="Париж" class="mt-1"/>
-            <text-input v-on:submit="submit()" text="Токио" class="mt-1"/>
+            <text-input v-for="station of planetData.stations"
+                        :key="station.id"
+                        v-on:submit="saveStation(station)"
+                        v-bind:text.sync="station.name"
+                        class="mt-1"
+                        :validator="isNameValid"
+                        capitalize
+            />
           </div>
         </div>
 
@@ -49,17 +53,22 @@
           class="mt-3"
         >
           <div class="mt-1">
-            <race-danger-selector race="Люди"></race-danger-selector>
-            <race-danger-selector race="Чужие"></race-danger-selector>
-            <race-danger-selector race="Диодао"></race-danger-selector>
-            <race-danger-selector race="Аранки"></race-danger-selector>
+            <race-danger-selector v-for="race of planetData.races"
+                                  :key="race.id"
+                                  :race="race.race"
+                                  :selected.sync="race.level"
+                                  v-on:level-updated="raceDangerLevelUpdated(race)"
+            />
           </div>
         </b-form-group>
 
         <b-row align-h="between">
-          <b-col cols="auto" vertical-align="center"></b-col>
+          <b-col cols="auto" vertical-align="center"/>
           <b-col cols="auto">
-            <b-button size="sm" variant="danger">Отключить планету</b-button>
+            <button-switch on-text="Отключить планету"
+                    off-text="Подключить планету"
+                    :enabled.sync="planetData.enabled"
+            />
           </b-col>
         </b-row>
 
@@ -74,10 +83,12 @@
   import RaceDangerSelector from "@/components/keykeepers/planets/RaceDangerSelector";
   import BButtonToolbar from "bootstrap-vue/src/components/button-toolbar/button-toolbar";
   import {PlanetEntity} from "@/classes/PlanetEntity";
+  import {StationOnPlanetEntity} from "@/classes/StationOnPlanetEntity";
+  import ButtonSwitch from "@/components/misc/input/ButtonSwitch";
 
   export default {
     name: "Planet",
-    components: {BButtonToolbar, RaceDangerSelector, ButtonsSelector, TextInput},
+    components: {ButtonSwitch, BButtonToolbar, RaceDangerSelector, ButtonsSelector, TextInput},
     data() {
       return {
         planetData: this.planet,
@@ -92,12 +103,37 @@
     },
 
     methods: {
-      submit() {
-        if (!this.newNameCorrect) {
+      savePlanetName() {
+        if (!this.isNameValid(this.planetData.name)) {
           return;
         }
 
         console.log('Value submitted...');
+      },
+
+      saveStation(station) {
+        if (!this.isNameValid(station.name)) {
+          return;
+        }
+
+        console.log("FUCK");
+      },
+
+      addStation() {
+        const station = new StationOnPlanetEntity(this.planetData.stations.length, "Новая Станция");
+        this.planetData.stations.push(station);
+      },
+
+      raceDangerLevelUpdated(race) {
+        console.log(JSON.stringify(race));
+      },
+
+      isNameValid(s) {
+        if (s === undefined) {
+          return false;
+        }
+
+        return s.trim().length > 0;
       }
     }
   }

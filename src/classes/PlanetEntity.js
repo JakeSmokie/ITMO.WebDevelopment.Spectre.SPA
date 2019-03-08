@@ -5,12 +5,12 @@ export class PlanetEntity {
   id = -1;
   name = "";
   description = "";
-  enabled = true;
+  enabled;
 
-  races = [new RaceOnPlanetEntity()];
-  stations = [new StationOnPlanetEntity()];
+  races = [];
+  stations;
 
-  constructor(id, name, description, races, stations, enabled) {
+  constructor(id, name, description, races, stations = [], enabled = true) {
     this.id = id;
     this.name = name;
     this.description = description;

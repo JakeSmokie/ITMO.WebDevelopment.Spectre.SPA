@@ -2,7 +2,9 @@
   <b-row align-h="end">
     <b-col cols="auto">{{ race }}</b-col>
     <b-col cols="auto">
-      <buttons-selector v-bind:selected.sync="selected" v-on:clicked="updateSelected()" :variants="variants"/>
+      <buttons-selector v-bind:selected.sync="currentSelection"
+                        v-on:clicked="updateSelected()"
+                        :variants="variants"/>
     </b-col>
   </b-row>
 </template>
@@ -19,9 +21,14 @@
           {style: "secondary", text: "🤔"},
           {style: "danger", text: "☠️"},
           {style: "warning", text: "⚠️"},
-          {style: "success", text: "😍"},
-        ]
+          {style: "success", text: "😊"},
+        ],
+
+        selected_: this.selected
       }
+    },
+
+    created() {
     },
 
     props: {
@@ -29,13 +36,29 @@
       selected: {
         type: Number,
         default: 0
-      }
+      },
+
+      levelUpdated: Function
     },
 
     components: {ButtonsSelector},
 
     methods: {
       updateSelected() {
+        this.$emit('levelUpdated');
+      }
+    },
+
+    computed: {
+      currentSelection: {
+        get: function () {
+          return this.selected_;
+        },
+
+        set: function (value) {
+          this.selected_ = value;
+          this.$emit('update:selected', value);
+        }
       }
     }
   }
