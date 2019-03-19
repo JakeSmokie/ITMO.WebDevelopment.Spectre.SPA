@@ -1,8 +1,8 @@
 <template>
   <b-button
-    v-on:click="updateState"
     :variant="enabled_ ? 'outline-success' : 'outline-danger'"
     size="sm"
+    @click="updateState"
   >
     {{ enabled_ ? onText : offText }}
   </b-button>
@@ -12,20 +12,21 @@
   export default {
     name: "ButtonSwitch",
 
-    data() {
-      return {
-        enabled_: this.enabled
-      }
-    },
-
     props: {
       enabled: {
         type: Boolean,
         default: true
       },
 
+      clicked: Function,
       onText: String,
       offText: String,
+    },
+
+    data() {
+      return {
+        enabled_: this.enabled
+      }
     },
 
     computed: {
@@ -43,6 +44,7 @@
     methods: {
       updateState() {
         this.currentEnabled = !this.currentEnabled;
+        this.clicked();
       }
     }
   }

@@ -1,18 +1,31 @@
 <template>
-  <div class="text-center mt-lg-5">
-    <b-spinner variant="success" type="grow" label="Spinning"/>
+  <div class="mt-5">
+    <b-spinner
+      variant="success"
+      type="grow"
+      label="Spinning"
+    />
 
-    <div>
-      <buttons-selector v-bind:selected.sync="selected" v-on:clicked="updateSelected()" :variants="variants"/>
+    <div class="mt-5">
+      <b-align-center>
+        <buttons-selector
+          :selected.sync="selected"
+          :variants="variants"
+          @clicked="updateSelected()"
+        />
+      </b-align-center>
     </div>
   </div>
 </template>
 
 <script>
   import ButtonsSelector from "@/components/misc/input/ButtonsSelector";
+  import BAlignCenter from "@/components/misc/alignment/BAlignCenter";
 
   export default {
     name: 'HelloWorld',
+
+    components: {BAlignCenter, ButtonsSelector},
     data() {
       return {
         variants: [
@@ -26,8 +39,6 @@
         ]
       }
     },
-
-    components: {ButtonsSelector},
 
   }
 </script>

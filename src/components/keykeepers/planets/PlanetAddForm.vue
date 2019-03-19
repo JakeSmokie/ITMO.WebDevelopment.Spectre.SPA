@@ -1,11 +1,12 @@
 <template>
   <b-card class="mb-5">
-    <text-input title="Название"
-                error-text="Название планеты должно состоять как минимум из одного символа"
-                :validator="isNameValid"
-                v-bind:text.sync="planet.name"
-                capitalize
-                no-action
+    <text-input
+      title="Название"
+      error-text="Название планеты должно состоять как минимум из одного символа"
+      :validator="isNameValid"
+      :text.sync="planet.name"
+      capitalize
+      no-action
     />
 
     <b-form-group
@@ -21,9 +22,15 @@
     </b-form-group>
 
     <b-row align-h="between">
-      <b-col cols="auto"/>
+      <b-col cols="auto" />
       <b-col cols="auto">
-        <b-button variant="outline-success" size="sm" v-on:click="onSubmit">Добавить</b-button>
+        <b-button
+          variant="outline-success"
+          size="sm"
+          @click="onSubmit"
+        >
+          Добавить
+        </b-button>
       </b-col>
     </b-row>
   </b-card>
@@ -34,8 +41,8 @@
   import {PlanetEntity} from "@/classes/PlanetEntity";
 
   export default {
-    components: {TextInput},
     name: "PlanetAddForm",
+    components: {TextInput},
 
     data() {
       return {

@@ -1,18 +1,25 @@
 <template>
   <div>
-    <b-list-group-item v-b-toggle="$id('collapse_planet_info')"
-                       href="#"
-                       :class="planetData.enabled ? 'text-success' : 'text-danger'">
+    <b-list-group-item
+      v-b-toggle="$id('collapse_planet_info')"
+      :class="planetData.disabled ?  'text-danger' : 'text-success'"
+      button
+    >
       {{ planetData.name }}
     </b-list-group-item>
-    <b-collapse :id="$id('collapse_planet_info')" class="mt-0" accordion="planets">
+    <b-collapse
+      :id="$id('collapse_planet_info')"
+      class="mt-0"
+      accordion="planets"
+    >
       <b-card>
-        <text-input title="Название"
-                    error-text="Название планеты должно состоять как минимум из одного символа"
-                    :validator="isNameValid"
-                    v-on:submit="savePlanetName()"
-                    v-bind:text.sync="planetData.name"
-                    capitalize
+        <text-input
+          title="Название"
+          error-text="Название планеты должно состоять как минимум из одного символа"
+          :validator="isNameValid"
+          :text.sync="planetData.name"
+          capitalize
+          @submit="savePlanetName()"
         />
 
         <b-form-group
@@ -29,20 +36,31 @@
 
         <div>
           <b-row align-h="between">
-            <b-col cols="auto" vertical-align="center">Станции</b-col>
+            <b-col
+              cols="auto"
+              vertical-align="center"
+            >
+              Станции
+            </b-col>
             <b-col cols="auto">
-              <b-button size="sm" v-on:click="addStation()">Добавить</b-button>
+              <b-button
+                size="sm"
+                @click="addStation()"
+              >
+                Добавить
+              </b-button>
             </b-col>
           </b-row>
 
           <div class="mt-2">
-            <text-input v-for="station of planetData.stations"
-                        :key="station.id"
-                        v-on:submit="saveStation(station)"
-                        v-bind:text.sync="station.name"
-                        class="mt-1"
-                        :validator="isNameValid"
-                        capitalize
+            <text-input
+              v-for="station of planetData.stations"
+              :key="station.id"
+              :text.sync="station.name"
+              class="mt-1"
+              :validator="isNameValid"
+              capitalize
+              @submit="saveStationName(station)"
             />
           </div>
         </div>
@@ -53,25 +71,24 @@
           class="mt-3"
         >
           <div class="mt-1">
-            <race-danger-selector v-for="race of planetData.races"
-                                  :key="race.id"
-                                  :race="race.race"
-                                  :selected.sync="race.level"
-                                  v-on:level-updated="raceDangerLevelUpdated(race)"
+            <race-danger-selector
+              v-for="race of planetData.races"
+              :key="Number(race.id.race)"
+              :race="races[Number(race.id.race) - 1].name"
+              :selected.sync="race.dangerLevel"
+              @level-updated="updateRaceDangerLevel(race)"
             />
           </div>
         </b-form-group>
 
-        <b-row align-h="between">
-          <b-col cols="auto" vertical-align="center"/>
-          <b-col cols="auto">
-            <button-switch on-text="Отключить планету"
-                    off-text="Подключить планету"
-                    :enabled.sync="planetData.enabled"
-            />
-          </b-col>
-        </b-row>
-
+        <b-align-right>
+          <button-switch
+            on-text="Подключить планету"
+            off-text="Отключить планету"
+            :enabled.sync="planetData.disabled"
+            :clicked="switchPlanetState"
+          />
+        </b-align-right>
       </b-card>
     </b-collapse>
   </div>
@@ -79,16 +96,18 @@
 
 <script>
   import TextInput from "@/components/misc/input/TextInput";
-  import ButtonsSelector from "@/components/misc/input/ButtonsSelector";
   import RaceDangerSelector from "@/components/keykeepers/planets/RaceDangerSelector";
-  import BButtonToolbar from "bootstrap-vue/src/components/button-toolbar/button-toolbar";
   import {PlanetEntity} from "@/classes/PlanetEntity";
   import {StationOnPlanetEntity} from "@/classes/StationOnPlanetEntity";
   import ButtonSwitch from "@/components/misc/input/ButtonSwitch";
+  import BAlignRight from "@/components/misc/alignment/BAlignRight";
+  import {KPlanetsServiceFactory} from "@/services/keykeepers/KPlanetsService";
 
   export default {
     name: "Planet",
-    components: {ButtonSwitch, BButtonToolbar, RaceDangerSelector, ButtonsSelector, TextInput},
+    components: {BAlignRight, ButtonSwitch, RaceDangerSelector, TextInput},
+
+    props: ['planet', 'races'],
     data() {
       return {
         planetData: this.planet,
@@ -96,22 +115,22 @@
       }
     },
 
-    props: {
-      planet: {
-        type: PlanetEntity
-      }
-    },
-
     methods: {
-      savePlanetName() {
+      async savePlanetName() {
         if (!this.isNameValid(this.planetData.name)) {
           return;
         }
 
-        console.log('Value submitted...');
+        const response = await KPlanetsServiceFactory.getInstance()
+          .savePlanetNameDesc(this.planetData);
+
+        if (!response.success) {
+          console.log('Oh no' + response);
+          return;
+        }
       },
 
-      saveStation(station) {
+      async saveStationName(station) {
         if (!this.isNameValid(station.name)) {
           return;
         }
@@ -124,8 +143,13 @@
         this.planetData.stations.push(station);
       },
 
-      raceDangerLevelUpdated(race) {
+      updateRaceDangerLevel(race) {
         console.log(JSON.stringify(race));
+      },
+
+      async switchPlanetState() {
+        const response = await KPlanetsServiceFactory.getInstance()
+          .switchPlanet(this.planetData);
       },
 
       isNameValid(s) {
@@ -134,7 +158,7 @@
         }
 
         return s.trim().length > 0;
-      }
+      },
     }
   }
 </script>

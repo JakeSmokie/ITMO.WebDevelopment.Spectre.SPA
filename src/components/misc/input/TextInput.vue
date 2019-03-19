@@ -1,15 +1,28 @@
 <template>
   <b-form @submit="onSubmit">
-    <b-input-group :prepend="title" size="sm">
-      <b-form-input v-bind:value="text"
-                    v-on:input="$emit('update:text', $event)"
-                    size="sm"
-                    :state="validation"
-                    :formatter="format">
-      </b-form-input>
+    <b-input-group
+      :prepend="title"
+      size="sm"
+    >
+      <b-form-input
+        :value="text"
+        size="sm"
+        :state="validation"
+        :formatter="format"
+        @input="$emit('update:text', $event)"
+        :placeholder="placeholder"
+        :type="type"
+        :name="name"
+      />
 
       <b-input-group-append v-if="!noAction">
-        <b-button variant="outline-success" type="submit" size="sm">{{ action }}</b-button>
+        <b-button
+          variant="outline-success"
+          type="submit"
+          size="sm"
+        >
+          {{ action }}
+        </b-button>
       </b-input-group-append>
     </b-input-group>
 
@@ -57,6 +70,31 @@
         type: Boolean,
         default: false
       },
+
+      placeholder: {
+        type: String,
+        default: ""
+      },
+
+      type: {
+        type: String,
+        default: "text"
+      },
+
+      name: {
+        type: String,
+        default: ""
+      }
+    },
+
+    computed: {
+      validation() {
+        if (this.noValidation) {
+          return null;
+        }
+
+        return this.validator(this.text);
+      }
     },
 
     methods: {
@@ -72,16 +110,6 @@
         }
 
         return value;
-      }
-    },
-
-    computed: {
-      validation() {
-        if (this.noValidation) {
-          return null;
-        }
-
-        return this.validator(this.text);
       }
     },
   }

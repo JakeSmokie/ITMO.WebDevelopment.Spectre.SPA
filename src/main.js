@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import UniqueId from 'vue-unique-id';
 
+Vue.use(require('vue-cookie'));
 Vue.use(UniqueId);
 Vue.use(BootstrapVue);
 Vue.config.productionTip = false;
@@ -16,7 +17,7 @@ Vue.directive('focus', {
   inserted: function (el) {
     el.focus()
   }
-})
+});
 
 /* eslint-disable no-new */
 new Vue({

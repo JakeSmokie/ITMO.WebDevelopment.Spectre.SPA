@@ -1,22 +1,21 @@
 <template>
-  <b-button-toolbar key-nav>
-    <b-button-group size="sm">
-      <b-button v-for="(variant, index) in variants"
-                :key="index"
-                :variant="(index === currentSelection ? '' : 'outline-') + variant.style"
-                v-on:click="selectItem(index)">
-        {{ variant.text }}
-      </b-button>
-    </b-button-group>
-  </b-button-toolbar>
+  <b-button-group size="sm">
+    <b-button
+      v-for="(variant, index) in variants"
+      :key="index"
+      :variant="(index === currentSelection ? '' : 'outline-') + variant.style"
+      @click="selectItem(index)"
+    >
+      {{ variant.text }}
+    </b-button>
+  </b-button-group>
 </template>
 
 <script>
-  import BButtonToolbar from "bootstrap-vue/src/components/button-toolbar/button-toolbar";
 
   export default {
     name: "ButtonsSelector",
-    components: {BButtonToolbar},
+    components: {},
     props: {
       selected: {
         type: Number,

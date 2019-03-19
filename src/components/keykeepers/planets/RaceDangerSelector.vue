@@ -1,10 +1,14 @@
 <template>
   <b-row align-h="end">
-    <b-col cols="auto">{{ race }}</b-col>
     <b-col cols="auto">
-      <buttons-selector v-bind:selected.sync="currentSelection"
-                        v-on:clicked="updateSelected()"
-                        :variants="variants"/>
+      {{ race }}
+    </b-col>
+    <b-col cols="auto">
+      <buttons-selector
+        :selected.sync="currentSelection"
+        :variants="variants"
+        @clicked="updateSelected()"
+      />
     </b-col>
   </b-row>
 </template>
@@ -14,6 +18,18 @@
 
   export default {
     name: "RaceDangerSelector",
+
+    components: {ButtonsSelector},
+
+    props: {
+      race: String,
+      selected: {
+        type: Number,
+        default: 0
+      },
+
+      levelUpdated: Function
+    },
 
     data() {
       return {
@@ -28,27 +44,6 @@
       }
     },
 
-    created() {
-    },
-
-    props: {
-      race: String,
-      selected: {
-        type: Number,
-        default: 0
-      },
-
-      levelUpdated: Function
-    },
-
-    components: {ButtonsSelector},
-
-    methods: {
-      updateSelected() {
-        this.$emit('levelUpdated');
-      }
-    },
-
     computed: {
       currentSelection: {
         get: function () {
@@ -59,6 +54,15 @@
           this.selected_ = value;
           this.$emit('update:selected', value);
         }
+      }
+    },
+
+    created() {
+    },
+
+    methods: {
+      updateSelected() {
+        this.$emit('levelUpdated');
       }
     }
   }
