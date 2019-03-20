@@ -55,7 +55,7 @@ export class AuthService {
   }
 
   async logout() {
-    location.replace('http://jakesmokie.ru:8080/am/XUI/?goto=http://jakesmokie.ru#logout/');
+    location.replace(`http://jakesmokie.ru:8080/am/XUI/?goto=${window.location.href}#logout/`);
 
     const token = Vue.cookie.get('iPlanetDirectoryPro');
 

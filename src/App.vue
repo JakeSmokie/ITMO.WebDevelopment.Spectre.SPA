@@ -9,7 +9,7 @@
     name: 'App',
 
     created() {
-      this.$cookie.set()
+      this.$cookie.set();
     }
   }
 </script>
