@@ -57,6 +57,8 @@
         }
 
         this.$emit('new-planet', this.planet);
+        this.planet.name = "";
+        this.planet.description = "";
       },
 
       isNameValid() {

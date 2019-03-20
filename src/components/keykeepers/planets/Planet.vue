@@ -72,11 +72,11 @@
         >
           <div class="mt-1">
             <race-danger-selector
-              v-for="race of planetData.races"
-              :key="Number(race.id.race)"
-              :race="races[Number(race.id.race) - 1].name"
-              :selected.sync="race.dangerLevel"
-              @level-updated="updateRaceDangerLevel(race)"
+              v-for="race of races"
+              :key="Number(race.id)"
+              :race="race.name"
+              :selected.sync="racesData[race.id]"
+              @level-updated="updateRaceDangerLevel(race.id)"
             />
           </div>
         </b-form-group>
@@ -111,7 +111,14 @@
     data() {
       return {
         planetData: this.planet,
-        newNameCorrect: true
+        newNameCorrect: true,
+        racesData: []
+      }
+    },
+
+    created() {
+      for (let i = 0; i < this.planetData.races.length; i++) {
+        this.racesData[this.planetData.races[i].id.race] = this.planetData.races[i].dangerLevel;
       }
     },
 
@@ -135,16 +142,20 @@
           return;
         }
 
-        console.log("FUCK");
+        station = await KPlanetsServiceFactory.getInstance()
+          .saveStationName(station);
       },
 
-      addStation() {
-        const station = new StationOnPlanetEntity(this.planetData.stations.length, "Новая Станция");
-        this.planetData.stations.push(station);
+      async addStation() {
+        const response = await KPlanetsServiceFactory.getInstance()
+          .addStation(this.planetData);
+
+        this.planetData.stations.push(response.entity);
       },
 
-      updateRaceDangerLevel(race) {
-        console.log(JSON.stringify(race));
+      async updateRaceDangerLevel(race) {
+        await KPlanetsServiceFactory.getInstance()
+          .updateRaceDangerLevel(this.planetData.id, race, this.racesData[race]);
       },
 
       async switchPlanetState() {

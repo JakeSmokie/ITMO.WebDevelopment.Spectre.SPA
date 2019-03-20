@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import KeykeepersHomePage from "@/components/keykeepers/KeykeepersHomePage";
 import KeykeepersManual from "@/components/keykeepers/KeykeepersManual";
 import KeykeepersPlanetsList from "@/components/keykeepers/planets/KeykeepersPlanetsList";
+import KeykeepersRacesList from "@/components/keykeepers/races/KeykeepersRacesList";
 import TouristsEntryPage from "@/components/tourists/TouristsEntryPage"
 import EntryPage from "@/components/EntryPage";
 import HelloWorld from "@/components/HelloWorld";
@@ -55,6 +56,12 @@ export default new Router({
           path: 'planets',
           name: 'KeykeepersPlanetsList',
           component: KeykeepersPlanetsList
+        },
+
+        {
+          path: 'races',
+          name: 'KeykeepersRacesList',
+          component: KeykeepersRacesList
         },
 
         {

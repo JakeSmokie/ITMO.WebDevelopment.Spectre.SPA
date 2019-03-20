@@ -1,10 +1,18 @@
 <template>
   <div class="container homePageMain">
     <div>
-      <b-nav
-        fill
-        tabs
-      >
+      <b-align-right class="mb-4">
+        <b-nav>
+          <b-nav-item :to="{name: 'KeykeepersManual'}">
+            🏠
+          </b-nav-item>
+          <b-nav-item @click="logout">
+            ❌
+          </b-nav-item>
+        </b-nav>
+      </b-align-right>
+
+      <b-nav fill tabs>
         <b-nav-item :to="{name: 'KeykeepersPlanetsList'}">
           Планеты 🌎
         </b-nav-item>
@@ -17,23 +25,26 @@
         <b-nav-item :to="'/keykeepers/stories'">
           Истории 📗
         </b-nav-item>
-        <b-nav-item :to="{name: 'KeykeepersManual'}">
-          <small>🏠</small>
-        </b-nav-item>
-        <b-nav-item
-          @click="logout"
-          class="bg-light"
-        >
-          <small>❌</small>
-        </b-nav-item>
       </b-nav>
     </div>
 
     <router-view
+      v-if="loaded"
       :planets="planets"
       :races="races"
       :props="props"
     />
+
+    <div v-if="!loaded">
+      <p class="mt-5">Загрузка...</p>
+
+      <b-spinner
+        class="mt-5"
+        variant="success"
+        type="grow"
+        label="Spinning"
+      />
+    </div>
   </div>
 </template>
 
@@ -41,26 +52,32 @@
   import {KPlanetsServiceFactory} from "../../services/keykeepers/KPlanetsService";
   import {KRacesServiceFactory} from "../../services/keykeepers/KRacesService";
   import {AuthServiceFactory} from "@/services/auth/AuthService";
+  import BAlignRight from "@/components/misc/alignment/BAlignRight";
 
   export default {
     name: 'KeykeepersHomePage',
-
+    components: {BAlignRight},
     data() {
       return {
         planets: [],
         races: [],
-        props: {}
+        props: {},
+        loaded: false
       }
     },
 
     async created() {
+      const response = await AuthServiceFactory.getInstance().getAttributes();
       const planets = await KPlanetsServiceFactory.getInstance().getPlanets();
       const races = await KRacesServiceFactory.getInstance().getRaces();
-      const response = await AuthServiceFactory.getInstance().getAttributes();
+
+      await this.sleep(1000);
 
       this.props = response.entity;
       this.planets = planets;
       this.races = races;
+
+      this.loaded = true;
     },
 
     methods: {
@@ -74,6 +91,10 @@
 
         this.$cookie.delete('ssotoken');
         this.$router.push({name: 'EntryPage'});
+      },
+
+      sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
       }
     }
   }

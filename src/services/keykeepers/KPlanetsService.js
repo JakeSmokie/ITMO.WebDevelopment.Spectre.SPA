@@ -12,7 +12,6 @@ export class KPlanetsService {
         token: Vue.cookie.get('iPlanetDirectoryPro')
       });
 
-    console.log(response);
     return response.body.entity;
   }
 
@@ -24,7 +23,16 @@ export class KPlanetsService {
         description: planet.description,
       });
 
-    console.log(response);
+    return response.body;
+  }
+
+  async addStation(planet) {
+    const response = await this.http
+      .post('keykeepers/planets/addstation', {
+        token: Vue.cookie.get('iPlanetDirectoryPro'),
+        id: planet.id,
+      });
+
     return response.body;
   }
 
@@ -37,7 +45,6 @@ export class KPlanetsService {
         description: planet.description,
       });
 
-    console.log(response);
     return response.body;
   }
 
@@ -48,7 +55,29 @@ export class KPlanetsService {
         id: planet.id,
       });
 
-    console.log(response);
+    return response.body;
+  }
+
+  async saveStationName(station) {
+    const response = await this.http
+      .post('keykeepers/planets/updatestationname', {
+        token: Vue.cookie.get('iPlanetDirectoryPro'),
+        station: station.id,
+        name: station.name
+      });
+
+    return response.body;
+  }
+
+  async updateRaceDangerLevel(planet, race, level) {
+    const response = await this.http
+      .post('keykeepers/planets/updateracedangerlevel', {
+        token: Vue.cookie.get('iPlanetDirectoryPro'),
+        planet: planet,
+        race: race,
+        level: level
+      });
+
     return response.body;
   }
 }

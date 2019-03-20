@@ -1,7 +1,13 @@
 <template>
   <div>
     <b-align-center class="mt-5">
-      Привет, {{ props["givenName"] + ' ' + props["sn"] }}! Скоро тут будет туториал.
+      <p>Привет, {{ props["givenName"] + ' ' + props["sn"] }}! Скоро тут будет туториал.</p>
+      <p class="mt-1">Не пишите, пожалуйста, гадостей.</p>
+      <p class="mt-5">
+        <small>
+          Пока работают только планеты и расы.
+        </small>
+      </p>
     </b-align-center>
   </div>
 </template>

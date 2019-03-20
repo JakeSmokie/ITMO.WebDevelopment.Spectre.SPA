@@ -62,7 +62,7 @@
 
     methods: {
       updateSelected() {
-        this.$emit('levelUpdated');
+        this.$emit('level-updated');
       }
     }
   }
