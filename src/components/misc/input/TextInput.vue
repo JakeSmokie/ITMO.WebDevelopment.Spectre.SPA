@@ -1,7 +1,7 @@
 <template>
   <b-form @submit="onSubmit">
     <b-input-group
-      :prepend="title"
+      :prepend="computedTitle"
       size="sm"
     >
       <b-form-input
@@ -13,9 +13,10 @@
         :placeholder="placeholder"
         :type="type"
         :name="name"
+        :readonly="readOnly"
       />
 
-      <b-input-group-append v-if="!noAction">
+      <b-input-group-append v-if="!noAction && !readOnly">
         <b-button
           variant="outline-success"
           type="submit"
@@ -84,6 +85,11 @@
       name: {
         type: String,
         default: ""
+      },
+
+      readOnly: {
+        type: Boolean,
+        default: false
       }
     },
 
@@ -94,6 +100,10 @@
         }
 
         return this.validator(this.text);
+      },
+
+      computedTitle() {
+        return this.isDesktop() ? this.title : '';
       }
     },
 
@@ -110,11 +120,14 @@
         }
 
         return value;
+      },
+
+      isDesktop() {
+        return window.innerWidth > 500;
       }
     },
   }
 </script>
 
 <style scoped>
-
 </style>

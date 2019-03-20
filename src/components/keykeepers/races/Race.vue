@@ -2,7 +2,7 @@
   <div>
     <b-list-group-item
       v-b-toggle="$id('collapse_race_info')"
-      class="text-success"
+      class="text-success p-2"
       button
     >
       {{ raceData.name }}

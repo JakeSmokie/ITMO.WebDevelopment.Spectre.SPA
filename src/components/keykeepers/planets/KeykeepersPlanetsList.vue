@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-5">
     <div class="m-3 mb-3">
       <b-row align-h="between">
         <b-col>
@@ -11,7 +11,10 @@
             placeholder="Поиск планет"
           />
         </b-col>
-        <b-col cols="auto">
+        <b-col
+          v-if="!readOnly"
+          cols="auto"
+        >
           <b-button
             v-b-toggle="$id('collapse_add_planet')"
             size="sm"
@@ -34,6 +37,7 @@
         :key="Number(planet.id)"
         :planet.sync="planet"
         :races="races"
+        :read-only="readOnly"
       />
     </b-list-group>
   </div>
@@ -51,7 +55,7 @@
     name: 'KeykeepersPlanetsList',
     components: {PlanetAddForm, Planet},
 
-    props: ['planets', 'races'],
+    props: ['planets', 'races', 'readOnly'],
 
     data() {
       return {
@@ -91,6 +95,5 @@
 </script>
 
 <style scoped>
-
 </style>
 

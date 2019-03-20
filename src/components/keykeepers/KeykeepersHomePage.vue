@@ -71,8 +71,6 @@
       const planets = await KPlanetsServiceFactory.getInstance().getPlanets();
       const races = await KRacesServiceFactory.getInstance().getRaces();
 
-      await this.sleep(1000);
-
       this.props = response.entity;
       this.planets = planets;
       this.races = races;

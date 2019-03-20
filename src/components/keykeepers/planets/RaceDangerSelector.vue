@@ -7,6 +7,7 @@
       <buttons-selector
         :selected.sync="currentSelection"
         :variants="variants"
+        :read-only="readOnly"
         @clicked="updateSelected()"
       />
     </b-col>
@@ -28,7 +29,8 @@
         default: 0
       },
 
-      levelUpdated: Function
+      levelUpdated: Function,
+      readOnly: Boolean
     },
 
     data() {

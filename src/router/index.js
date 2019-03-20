@@ -4,10 +4,14 @@ import KeykeepersHomePage from "@/components/keykeepers/KeykeepersHomePage";
 import KeykeepersManual from "@/components/keykeepers/KeykeepersManual";
 import KeykeepersPlanetsList from "@/components/keykeepers/planets/KeykeepersPlanetsList";
 import KeykeepersRacesList from "@/components/keykeepers/races/KeykeepersRacesList";
-import TouristsEntryPage from "@/components/tourists/TouristsEntryPage"
+import TouristsEntryPage from "@/components/tourists/TouristsEntryPage";
+import TouristsRegisterPage from "@/components/tourists/TouristsRegisterPage";
+import TouristsHomePage from "@/components/tourists/TouristsHomePage";
+import PageNotFound from "@/components/PageNotFound";
 import EntryPage from "@/components/EntryPage";
 import HelloWorld from "@/components/HelloWorld";
 import {AuthServiceFactory} from "@/services/auth/AuthService";
+import {KTouristsServiceFactory} from "@/services/tourists/KTouristsService";
 
 Vue.use(Router);
 
@@ -79,7 +83,6 @@ export default new Router({
     {
       path: '/tourists',
       component: TouristsEntryPage,
-      name: 'TouristsEntryPage',
 
       beforeEnter: async (to, from, next) => {
         const auth = AuthServiceFactory.getInstance();
@@ -91,6 +94,49 @@ export default new Router({
 
         next();
       },
-    }
+
+      children: [
+        {
+          path: 'register',
+          component: TouristsRegisterPage,
+          name: 'TouristsRegisterPage',
+
+          beforeEnter: async (to, from, next) => {
+            if (await KTouristsServiceFactory.getInstance().isRegistered()) {
+              next({name: 'TouristsHomePage'});
+              return;
+            }
+
+            next();
+          },
+        },
+        {
+          path: '',
+          component: TouristsHomePage,
+          name: 'TouristsHomePage',
+
+          beforeEnter: async (to, from, next) => {
+            if (!(await KTouristsServiceFactory.getInstance().isRegistered())) {
+              next({name: 'TouristsRegisterPage'});
+              return;
+            }
+
+            next();
+          },
+
+          children: [
+            {
+              path: 'planets',
+              component: KeykeepersPlanetsList,
+              props: {
+                readOnly: true
+              }
+            }
+          ],
+        },
+      ],
+    },
+
+    {path: "*", component: PageNotFound}
   ]
 })

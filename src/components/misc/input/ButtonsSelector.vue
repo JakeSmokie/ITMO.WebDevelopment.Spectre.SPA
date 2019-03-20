@@ -4,6 +4,7 @@
       v-for="(variant, index) in variants"
       :key="index"
       :variant="(index === currentSelection ? '' : 'outline-') + variant.style"
+      :disabled="readOnly"
       @click="selectItem(index)"
     >
       {{ variant.text }}
@@ -24,7 +25,9 @@
 
       variants: {
         type: Array
-      }
+      },
+
+      readOnly: Boolean,
     },
 
     data() {

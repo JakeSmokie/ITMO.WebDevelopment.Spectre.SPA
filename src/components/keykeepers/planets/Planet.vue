@@ -4,6 +4,7 @@
       v-b-toggle="$id('collapse_planet_info')"
       :class="planetData.disabled ?  'text-danger' : 'text-success'"
       button
+      class="p-2"
     >
       {{ planetData.name }}
     </b-list-group-item>
@@ -14,6 +15,7 @@
     >
       <b-card>
         <text-input
+          v-if="!readOnly"
           title="Название"
           error-text="Название планеты должно состоять как минимум из одного символа"
           :validator="isNameValid"
@@ -24,13 +26,14 @@
 
         <b-form-group
           description="Краткое описание планеты."
-          class="mt-3"
+          :class="readOnly ? 'mt-1' : 'mt-3'"
         >
           <b-form-textarea
             v-model="planetData.description"
             placeholder="Описание планеты"
             rows="1"
             max-rows="6"
+            :readonly="readOnly"
           />
         </b-form-group>
 
@@ -44,6 +47,7 @@
             </b-col>
             <b-col cols="auto">
               <b-button
+                v-if="!readOnly"
                 size="sm"
                 @click="addStation()"
               >
@@ -60,6 +64,7 @@
               class="mt-1"
               :validator="isNameValid"
               capitalize
+              :read-only="readOnly"
               @submit="saveStationName(station)"
             />
           </div>
@@ -76,6 +81,7 @@
               :key="Number(race.id)"
               :race="race.name"
               :selected.sync="racesData[race.id]"
+              :read-only="readOnly"
               @level-updated="updateRaceDangerLevel(race.id)"
             />
           </div>
@@ -83,6 +89,7 @@
 
         <b-align-right>
           <button-switch
+            v-if="!readOnly"
             on-text="Подключить планету"
             off-text="Отключить планету"
             :enabled.sync="planetData.disabled"
@@ -107,7 +114,7 @@
     name: "Planet",
     components: {BAlignRight, ButtonSwitch, RaceDangerSelector, TextInput},
 
-    props: ['planet', 'races'],
+    props: ['planet', 'races', 'readOnly'],
     data() {
       return {
         planetData: this.planet,
