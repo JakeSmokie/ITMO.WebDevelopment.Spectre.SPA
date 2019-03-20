@@ -19,6 +19,7 @@
       class="mt-4"
       size="sm"
       variant="outline-success"
+      :disabled="areFieldsNotFilled"
       @click="register"
     >
       Продолжить
@@ -45,24 +46,26 @@
       }
     },
 
+    computed: {
+      areFieldsNotFilled() {
+        return this.chosenRace == null || this.chosenPlanet == null || this.chosenStation == null;
+      }
+    },
+
     methods: {
       async register() {
-        if (this.chosenRace == null || this.chosenPlanet == null || this.chosenStation == null) {
+        if (this.areFieldsNotFilled) {
           return;
         }
 
         await KTouristsServiceFactory.getInstance()
           .register(this.chosenRace.id, this.chosenPlanet.id, this.chosenStation.id);
 
-        const response = await KTouristsServiceFactory.getInstance()
+        await KTouristsServiceFactory.getInstance()
           .isRegistered();
 
-        if (!response.entity) {
-          return;
-        }
-
         this.$router.push('/tourists');
-      }
+      },
     }
   }
 </script>

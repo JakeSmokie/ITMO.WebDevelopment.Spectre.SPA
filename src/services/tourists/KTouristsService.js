@@ -24,7 +24,7 @@ export class KTouristsService {
         token: Vue.cookie.get('iPlanetDirectoryPro')
       });
 
-    return response.body;
+    return response.body.entity;
   }
 }
 
