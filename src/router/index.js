@@ -7,6 +7,7 @@ import KeykeepersRacesList from "@/components/keykeepers/races/KeykeepersRacesLi
 import TouristsEntryPage from "@/components/tourists/TouristsEntryPage";
 import TouristsRegisterPage from "@/components/tourists/TouristsRegisterPage";
 import TouristsHomePage from "@/components/tourists/TouristsHomePage";
+import TouristsHomeHomePage from "@/components/tourists/TouristsHomeHomePage";
 import PageNotFound from "@/components/PageNotFound";
 import EntryPage from "@/components/EntryPage";
 import HelloWorld from "@/components/HelloWorld";
@@ -103,7 +104,7 @@ export default new Router({
 
           beforeEnter: async (to, from, next) => {
             if (await KTouristsServiceFactory.getInstance().isRegistered()) {
-              next({name: 'TouristsHomePage'});
+              next('/tourists');
               return;
             }
 
@@ -113,7 +114,6 @@ export default new Router({
         {
           path: '',
           component: TouristsHomePage,
-          name: 'TouristsHomePage',
 
           beforeEnter: async (to, from, next) => {
             if (!(await KTouristsServiceFactory.getInstance().isRegistered())) {
@@ -131,6 +131,10 @@ export default new Router({
               props: {
                 readOnly: true
               }
+            },
+            {
+              path: '',
+              component: TouristsHomeHomePage
             }
           ],
         },

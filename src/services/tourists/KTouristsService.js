@@ -26,6 +26,15 @@ export class KTouristsService {
 
     return response.body.entity;
   }
+
+  async getTouristProperties() {
+    const response = await this.http
+      .get('tourists/auth/gettouristproperties', {
+        token: Vue.cookie.get('iPlanetDirectoryPro')
+      });
+
+    return response.body.entity;
+  }
 }
 
 export class KTouristsServiceFactory {
