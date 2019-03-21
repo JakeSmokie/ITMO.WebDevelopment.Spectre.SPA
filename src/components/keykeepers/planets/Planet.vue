@@ -31,7 +31,7 @@
           <b-form-textarea
             v-model="planetData.description"
             placeholder="Описание планеты"
-            rows="1"
+            rows="6"
             max-rows="6"
             :readonly="readOnly"
           />

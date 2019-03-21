@@ -17,6 +17,7 @@
         :planets="planets"
         :races="races"
         :props="props"
+        :stories="stories"
       />
 
       <div v-if="!loaded">
@@ -38,6 +39,7 @@
   import BAlignRight from "@/components/misc/alignment/BAlignRight";
   import {KPlanetsServiceFactory} from "@/services/keykeepers/KPlanetsService";
   import {KRacesServiceFactory} from "@/services/keykeepers/KRacesService";
+  import {KTouristsStoriesServiceFactory} from "@/services/tourists/KTouristsStoriesService";
 
   export default {
     name: "TouristsEntryPage",
@@ -47,6 +49,7 @@
         planets: [],
         races: [],
         props: {},
+        stories: {},
         loaded: false
       }
     },
@@ -55,10 +58,12 @@
       const response = await AuthServiceFactory.getInstance().getAttributes();
       const planets = await KPlanetsServiceFactory.getInstance().getPlanets();
       const races = await KRacesServiceFactory.getInstance().getRaces();
+      const stories = await KTouristsStoriesServiceFactory.getInstance().getStories();
 
       this.props = response.entity;
       this.planets = planets;
       this.races = races;
+      this.stories = stories;
 
       this.loaded = true;
     },

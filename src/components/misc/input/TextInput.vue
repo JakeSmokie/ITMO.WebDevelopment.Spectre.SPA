@@ -21,6 +21,7 @@
           variant="outline-success"
           type="submit"
           size="sm"
+          :disabled="!validation"
         >
           {{ action }}
         </b-button>
@@ -96,7 +97,7 @@
     computed: {
       validation() {
         if (this.noValidation) {
-          return null;
+          return true;
         }
 
         return this.validator(this.text);

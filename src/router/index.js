@@ -8,6 +8,7 @@ import TouristsEntryPage from "@/components/tourists/TouristsEntryPage";
 import TouristsRegisterPage from "@/components/tourists/TouristsRegisterPage";
 import TouristsHomePage from "@/components/tourists/TouristsHomePage";
 import TouristsHomeHomePage from "@/components/tourists/TouristsHomeHomePage";
+import TouristsStoriesPage from "@/components/tourists/TouristsStoriesPage";
 import PageNotFound from "@/components/PageNotFound";
 import EntryPage from "@/components/EntryPage";
 import HelloWorld from "@/components/HelloWorld";
@@ -133,9 +134,13 @@ export default new Router({
               }
             },
             {
+              path: 'stories',
+              component: TouristsStoriesPage
+            },
+            {
               path: '',
               component: TouristsHomeHomePage
-            }
+            },
           ],
         },
       ],
