@@ -1,8 +1,11 @@
 <template>
-  <div class="container homePageMain">
+  <div class="container homePageMain mb-5">
     <div>
       <b-align-right class="mb-4">
         <b-nav>
+          <b-nav-item :href="`http://jakesmokie.ru:8080/am/XUI/?goto=${url}#profile/details`">
+            ⚙️
+          </b-nav-item>
           <b-nav-item :to="'/tourists'">
             🏠
           </b-nav-item>
@@ -17,7 +20,6 @@
         :planets="planets"
         :races="races"
         :props="props"
-        :stories="stories"
       />
 
       <div v-if="!loaded">
@@ -48,9 +50,14 @@
       return {
         planets: [],
         races: [],
-        props: {},
-        stories: {},
+        props: [],
         loaded: false
+      }
+    },
+
+    computed: {
+      url() {
+        return window.location.href;
       }
     },
 
@@ -58,12 +65,10 @@
       const response = await AuthServiceFactory.getInstance().getAttributes();
       const planets = await KPlanetsServiceFactory.getInstance().getPlanets();
       const races = await KRacesServiceFactory.getInstance().getRaces();
-      const stories = await KTouristsStoriesServiceFactory.getInstance().getStories();
 
       this.props = response.entity;
       this.planets = planets;
       this.races = races;
-      this.stories = stories;
 
       this.loaded = true;
     },

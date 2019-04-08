@@ -9,7 +9,6 @@
     name: 'App',
 
     created() {
-      this.$cookie.set();
     }
   }
 </script>

@@ -33,11 +33,12 @@
       </b-collapse>
 
       <planet
-        v-for="planet of filteredPlanets"
+        v-for="planet of orderBy(filteredPlanets, 'name')"
         :key="Number(planet.id)"
         :planet.sync="planet"
         :races="races"
         :read-only="readOnly"
+        :tourist-info="touristInfo"
       />
     </b-list-group>
   </div>
@@ -50,12 +51,14 @@
   import {StationOnPlanetEntity} from "@/classes/StationOnPlanetEntity";
   import {RaceOnPlanetEntity} from "@/classes/RaceOnPlanetEntity";
   import {KPlanetsServiceFactory} from "@/services/keykeepers/KPlanetsService";
+  import Vue2Filters from "vue2-filters";
 
   export default {
     name: 'KeykeepersPlanetsList',
     components: {PlanetAddForm, Planet},
+    mixins: [Vue2Filters.mixin],
 
-    props: ['planets', 'races', 'readOnly'],
+    props: ['planets', 'races', 'readOnly', 'touristInfo'],
 
     data() {
       return {

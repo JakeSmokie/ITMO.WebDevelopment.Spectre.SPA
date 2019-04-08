@@ -9,7 +9,9 @@
       :planets="planets"
       :chosen-planet.sync="chosenPlanet"
       :chosen-station.sync="chosenStation"
+      title="Выбрать родную планету"
     />
+    
     <tourists-register-page-race
       :races="races"
       :chosen-race.sync="chosenRace"

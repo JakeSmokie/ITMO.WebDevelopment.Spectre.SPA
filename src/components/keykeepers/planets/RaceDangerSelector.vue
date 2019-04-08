@@ -36,10 +36,10 @@
     data() {
       return {
         variants: [
-          {style: "secondary", text: "🤔"},
-          {style: "danger", text: "☠️"},
-          {style: "warning", text: "⚠️"},
-          {style: "success", text: "😊"},
+          {style: "secondary",  text: "🤔"},
+          {style: "danger",     text: "☠️"},
+          {style: "warning",    text: "⚠️"},
+          {style: "success",    text: "😊"},
         ],
 
         selected_: this.selected

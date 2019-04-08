@@ -4,14 +4,18 @@ import KeykeepersHomePage from "@/components/keykeepers/KeykeepersHomePage";
 import KeykeepersManual from "@/components/keykeepers/KeykeepersManual";
 import KeykeepersPlanetsList from "@/components/keykeepers/planets/KeykeepersPlanetsList";
 import KeykeepersRacesList from "@/components/keykeepers/races/KeykeepersRacesList";
+import KeykeepersStoriesList from "@/components/keykeepers/stories/KeykeepersStoriesList";
+import KeykeepersTourists from "@/components/keykeepers/tourists/KeykeepersTourists";
 import TouristsEntryPage from "@/components/tourists/TouristsEntryPage";
 import TouristsRegisterPage from "@/components/tourists/TouristsRegisterPage";
 import TouristsHomePage from "@/components/tourists/TouristsHomePage";
 import TouristsHomeHomePage from "@/components/tourists/TouristsHomeHomePage";
+import TouristsStoryGreeting from "@/components/tourists/TouristsStoryGreeting";
+import TouristsPlanetGreeting from "@/components/tourists/TouristsPlanetGreeting";
 import TouristsStoriesPage from "@/components/tourists/TouristsStoriesPage";
+import TouristsTravelsPage from "@/components/tourists/TouristsTravelsPage";
 import PageNotFound from "@/components/PageNotFound";
 import EntryPage from "@/components/EntryPage";
-import HelloWorld from "@/components/HelloWorld";
 import {AuthServiceFactory} from "@/services/auth/AuthService";
 import {KTouristsServiceFactory} from "@/services/tourists/KTouristsService";
 
@@ -49,6 +53,11 @@ export default new Router({
       beforeEnter: async (to, from, next) => {
         const auth = AuthServiceFactory.getInstance();
 
+        if (!(await auth.isAuthorized())) {
+          location.replace(`http://jakesmokie.ru:8080/am/XUI/?goto=${window.location.href}#login/`);
+          return;
+        }
+
         if (!(await auth.isKeykeeper())) {
           next({name: 'EntryPage'});
           return;
@@ -71,14 +80,19 @@ export default new Router({
         },
 
         {
-          path: '',
-          component: KeykeepersManual,
-          name: 'KeykeepersManual'
+          path: 'stories',
+          component: KeykeepersStoriesList
         },
 
         {
-          path: '*',
-          component: HelloWorld
+          path: 'tourists',
+          component: KeykeepersTourists,
+        },
+
+        {
+          path: '',
+          component: KeykeepersManual,
+          name: 'KeykeepersManual'
         },
       ],
     },
@@ -136,6 +150,18 @@ export default new Router({
             {
               path: 'stories',
               component: TouristsStoriesPage
+            },
+            {
+              path: 'stories/newstory',
+              component: TouristsStoryGreeting
+            },
+            {
+              path: 'travels',
+              component: TouristsTravelsPage
+            },
+            {
+              path: 'travels/newtravel',
+              component: TouristsPlanetGreeting
             },
             {
               path: '',

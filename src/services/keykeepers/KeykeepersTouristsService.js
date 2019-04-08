@@ -1,45 +1,44 @@
 import {HttpFactory} from "../utils/HttpService";
 import Vue from "vue";
 
-export class KTouristsStoriesService {
+export class KeykeepersTouristsService {
   constructor() {
     this.http = HttpFactory.getInstance();
   }
 
-  async canSendStory() {
+  async getTourists() {
     const response = await this.http
-      .get('tourists/stories/cansendstory', {
-        token: Vue.cookie.get('iPlanetDirectoryPro')
+      .get('keykeepers/tourists/gettourists', {
+        token: Vue.cookie.get('iPlanetDirectoryPro'),
       });
 
     return response.body.entity;
   }
 
-  async sendStory(name, text) {
+  async getTravels() {
     const response = await this.http
-      .post('tourists/stories/sendstory', {
+      .get('keykeepers/tourists/gettravels', {
         token: Vue.cookie.get('iPlanetDirectoryPro'),
-        name: name,
-        text: text
       });
 
     return response.body.entity;
   }
 
-  async getStories() {
+  async switchTourist(id) {
     const response = await this.http
-      .get('tourists/stories/getstories', {
+      .post('keykeepers/tourists/switchtourist', {
         token: Vue.cookie.get('iPlanetDirectoryPro'),
+        id: id
       });
 
-    return response.body;
+    return response.body.entity;
   }
 }
 
-export class KTouristsStoriesServiceFactory {
+export class KeykeepersTouristsServiceFactory {
   static getInstance() {
     if (this.instance == null) {
-      this.instance = new KTouristsStoriesService();
+      this.instance = new KeykeepersTouristsService();
       this.instance.constructor = null;
     }
     return this.instance;

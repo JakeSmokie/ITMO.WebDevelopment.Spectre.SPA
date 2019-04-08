@@ -77,9 +77,10 @@
 
   export default {
     name: 'TouristsStoriesPageNewStory',
-    components: { TextInput},
+    components: {TextInput},
     props: {
-      searchToken: {}
+      searchToken: {},
+      stories: Array
     },
 
     data() {
@@ -88,6 +89,7 @@
         storyName: "",
         story: "",
         confirmed: false,
+        loaded: false
       }
     },
 
@@ -103,23 +105,49 @@
     },
 
     async created() {
-      this.canSendStory = await KTouristsStoriesServiceFactory.getInstance()
-        .canSendStory();
+      await this.updateStoryAvailability();
+
+      this.loaded = true;
+      this.updating();
+    },
+
+    destroyed() {
+      this.loaded = false;
     },
 
     methods: {
       async sendStory() {
-        const response = await KTouristsStoriesServiceFactory.getInstance()
+        this.canSendStory = false;
+        const newStory = await KTouristsStoriesServiceFactory.getInstance()
           .sendStory(this.storyName, this.story);
 
-        console.log(response);
-
+        this.stories.push(newStory);
         this.storyName = '';
         this.story = '';
-        this.canSendStory = await KTouristsStoriesServiceFactory.getInstance()
-          .canSendStory();
 
+        await this.updateStoryAvailability();
         this.$root.$emit('bv::toggle::collapse', this.$id('collapse_add_story'));
+
+        this.$router.push('/tourists/stories/newstory');
+      },
+
+      async updateStoryAvailability() {
+        try {
+          this.canSendStory = await KTouristsStoriesServiceFactory.getInstance()
+            .canSendStory();
+        } catch (e) {
+        }
+      },
+
+      async updating() {
+        while (this.loaded) {
+          await this.sleep(1000);
+          await this.updateStoryAvailability();
+        }
+      },
+
+      sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
       },
 
       isNameValid() {

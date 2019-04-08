@@ -7,7 +7,9 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import UniqueId from 'vue-unique-id';
+import Vue2Filters from 'vue2-filters'
 
+Vue.use(Vue2Filters);
 Vue.use(require('vue-cookie'));
 Vue.use(UniqueId);
 Vue.use(BootstrapVue);

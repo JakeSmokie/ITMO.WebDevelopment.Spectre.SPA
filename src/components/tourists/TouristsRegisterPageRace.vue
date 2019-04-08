@@ -21,7 +21,7 @@
         <b-list-group-item
           class="p-1"
           button
-          :class="race === chosenRace ? '' : 'text-danger'"
+          :class="race === chosenRace ? 'text-primary' : ''"
           :variant="race === chosenRace ? 'light' : ''"
           :disabled="race === chosenRace"
           @click="chooseRace(race)"

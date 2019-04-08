@@ -2,11 +2,11 @@
   <div>
     <b-list-group-item
       v-b-toggle="$id('collapse_planet_info')"
-      :class="planetData.disabled ?  'text-danger' : 'text-success'"
+      :class="[dangerLevel.style]"
       button
       class="p-2"
     >
-      {{ planetData.name }}
+      {{ planetData.name }} {{ dangerLevel.text }}
     </b-list-group-item>
     <b-collapse
       :id="$id('collapse_planet_info')"
@@ -114,13 +114,41 @@
     name: "Planet",
     components: {BAlignRight, ButtonSwitch, RaceDangerSelector, TextInput},
 
-    props: ['planet', 'races', 'readOnly'],
+    props: ['planet', 'races', 'readOnly', 'touristInfo'],
     data() {
       return {
         planetData: this.planet,
         newNameCorrect: true,
-        racesData: []
+        racesData: [],
+
+        variants: [
+          {style: "text-dark", text: "🤔"},
+          {style: "text-danger", text: "☠️"},
+          {style: "text-warning", text: "⚠️"},
+          {style: "text-success", text: "😊"},
+        ],
       }
+    },
+
+    computed: {
+      dangerLevel() {
+        if (this.planetData.disabled) {
+          return {style: 'text-danger', text: '🛑'};
+        }
+
+        if (this.touristInfo === undefined) {
+          return {style: 'text-success', text: ''};
+        }
+
+        const raceAtPlanet = this.planet.races
+          .filter(p => p.id.race === this.touristInfo.race.id)[0];
+
+        if (raceAtPlanet === undefined) {
+          return this.variants[0];
+        }
+
+        return this.variants[raceAtPlanet.dangerLevel];
+      },
     },
 
     created() {

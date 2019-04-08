@@ -36,10 +36,9 @@
           {style: "success", text: "🙂"},
           {style: "success", text: "😊"},
           {style: "success", text: "😍"},
-        ]
+        ],
       }
     },
-
   }
 </script>
 
